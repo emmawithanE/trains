@@ -1,7 +1,7 @@
-[gd_scene load_steps=5 format=3 uid="uid://dwcagy0fxici2"]
+[gd_scene load_steps=7 format=3 uid="uid://dwcagy0fxici2"]
 
 [ext_resource type="Script" path="res://TrackSegment.gd" id="1_yrgm1"]
-[ext_resource type="Script" path="res://train.gd" id="2_iagpv"]
+[ext_resource type="PackedScene" uid="uid://dckb1fl2gi75c" path="res://train.tscn" id="2_nxq2c"]
 
 [sub_resource type="Curve3D" id="Curve3D_necrl"]
 _data = {
@@ -10,26 +10,60 @@ _data = {
 }
 point_count = 2
 
-[sub_resource type="SphereMesh" id="SphereMesh_6je2l"]
+[sub_resource type="Curve3D" id="Curve3D_gjofs"]
+_data = {
+"points": PackedVector3Array(0, 0, 0, 0, 0, -1.81, 0, 0, 0, 0, 0, 2.29, 0, 0, 0, 6.312, 0, -8.54),
+"tilts": PackedFloat32Array(0, 0)
+}
+point_count = 2
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rliu8"]
+albedo_color = Color(0.215686, 0.443137, 0.172549, 1)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_ip6c0"]
+material = SubResource("StandardMaterial3D_rliu8")
+size = Vector2(25.195, 39.87)
 
 [node name="Node3D" type="Node3D"]
 
-[node name="TrackSegment" type="Node3D" parent="." node_paths=PackedStringArray("paths")]
+[node name="TrackSegment" type="Node3D" parent="." node_paths=PackedStringArray("paths", "next_segment")]
 script = ExtResource("1_yrgm1")
 paths = [NodePath("Path3D")]
+next_segment = NodePath("../TrackSegment2")
 
 [node name="Path3D" type="Path3D" parent="TrackSegment"]
 curve = SubResource("Curve3D_necrl")
 
-[node name="PathFollow3D" type="PathFollow3D" parent="TrackSegment/Path3D"]
-transform = Transform3D(0.999999, 0, 0, 0, 1, 0, 0, 0, 0.999999, 0, 0, 0)
-script = ExtResource("2_iagpv")
-speed = 2.985
+[node name="TrackSegment2" type="Node3D" parent="." node_paths=PackedStringArray("paths", "next_segment")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.31001, 4.76837e-07, -4.31002)
+script = ExtResource("1_yrgm1")
+paths = [NodePath("Path3D")]
+next_segment = NodePath("../TrackSegment3")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="TrackSegment/Path3D/PathFollow3D"]
-mesh = SubResource("SphereMesh_6je2l")
+[node name="Path3D" type="Path3D" parent="TrackSegment2"]
+curve = SubResource("Curve3D_necrl")
+
+[node name="TrackSegment3" type="Node3D" parent="." node_paths=PackedStringArray("paths")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.64273, 0, -8.6319)
+script = ExtResource("1_yrgm1")
+paths = [NodePath("Path3D")]
+
+[node name="Path3D" type="Path3D" parent="TrackSegment3"]
+curve = SubResource("Curve3D_gjofs")
 
 [node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(-0.433013, -0.5, 0.75, 0.216506, 0.75, 0.625, -0.875, 0.433013, -0.216506, 4, 4, -4)
+transform = Transform3D(-3.09189e-08, -0.706872, 0.707341, -3.08984e-08, 0.707341, 0.706872, -1, 1.77636e-15, -4.37114e-08, 15.7478, 15.6403, -7.01978)
 current = true
-fov = 127.01
+fov = 72.2
+
+[node name="Train" parent="." node_paths=PackedStringArray("starting_segment") instance=ExtResource("2_nxq2c")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0145617, 0, 0.0257282)
+starting_segment = NodePath("../TrackSegment")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.54, 0)
+mesh = SubResource("PlaneMesh_ip6c0")
+skeleton = NodePath("../Camera3D")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.810665, 0.385592, 0.440613, -0.58551, 0.53387, 0.61005, 0, -0.75253, 0.658558, 0, 9.12407, 6.83961)
