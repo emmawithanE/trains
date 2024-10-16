@@ -1,0 +1,66 @@
+[gd_scene load_steps=8 format=3 uid="uid://blw4d2ly50suo"]
+
+[ext_resource type="Texture2D" uid="uid://dnwtwi44wd4b8" path="res://icon.svg" id="1_6oj5c"]
+[ext_resource type="Script" path="res://2d_proto/Train2D.gd" id="1_iwqoo"]
+[ext_resource type="Script" path="res://2d_proto/TrackSegment2D.gd" id="2_k5r8f"]
+
+[sub_resource type="Curve2D" id="Curve2D_5mcwe"]
+
+[sub_resource type="Curve2D" id="Curve2D_yleaq"]
+_data = {
+"points": PackedVector2Array(-82.0435, -1.05946, 82.0435, 1.05946, 0, 0, -60.8542, -5.29732, 60.8542, 5.29732, 171, -47)
+}
+point_count = 2
+
+[sub_resource type="Curve2D" id="Curve2D_cctky"]
+_data = {
+"points": PackedVector2Array(-82.0435, -1.05946, 82.0435, 1.05946, 0, 0, -60.8542, -5.29732, 60.8542, 5.29732, 166, 144)
+}
+point_count = 2
+
+[sub_resource type="Curve2D" id="Curve2D_tthnn"]
+_data = {
+"points": PackedVector2Array(-82.0435, -1.05946, 82.0435, 1.05946, 0, 0, 142.793, 49.857, -142.793, -49.857, -44, 110, 0, 0, 0, 0, -158, 239)
+}
+point_count = 3
+
+[node name="Trains" type="Node2D"]
+
+[node name="Train" type="Node2D" parent="." node_paths=PackedStringArray("starting_segment")]
+script = ExtResource("1_iwqoo")
+starting_segment = NodePath("../TrackSegment")
+
+[node name="Path2D" type="Path2D" parent="Train"]
+curve = SubResource("Curve2D_5mcwe")
+
+[node name="PathFollow2D" type="PathFollow2D" parent="Train/Path2D"]
+loop = false
+
+[node name="Sprite2D" type="Sprite2D" parent="Train/Path2D/PathFollow2D"]
+texture = ExtResource("1_6oj5c")
+
+[node name="TrackSegment" type="Node2D" parent="." node_paths=PackedStringArray("paths", "next_segment")]
+position = Vector2(210, 138)
+script = ExtResource("2_k5r8f")
+paths = [NodePath("Path2D")]
+next_segment = NodePath("../TrackSegment2")
+
+[node name="Path2D" type="Path2D" parent="TrackSegment"]
+curve = SubResource("Curve2D_yleaq")
+
+[node name="TrackSegment2" type="Node2D" parent="." node_paths=PackedStringArray("paths", "next_segment")]
+position = Vector2(381, 91)
+script = ExtResource("2_k5r8f")
+paths = [NodePath("Path2D")]
+next_segment = NodePath("../TrackSegment3")
+
+[node name="Path2D" type="Path2D" parent="TrackSegment2"]
+curve = SubResource("Curve2D_cctky")
+
+[node name="TrackSegment3" type="Node2D" parent="." node_paths=PackedStringArray("paths")]
+position = Vector2(547, 235)
+script = ExtResource("2_k5r8f")
+paths = [NodePath("Path2D")]
+
+[node name="Path2D" type="Path2D" parent="TrackSegment3"]
+curve = SubResource("Curve2D_tthnn")

@@ -1,0 +1,35 @@
+[gd_scene load_steps=5 format=3 uid="uid://dwcagy0fxici2"]
+
+[ext_resource type="Script" path="res://TrackSegment.gd" id="1_yrgm1"]
+[ext_resource type="Script" path="res://train.gd" id="2_iagpv"]
+
+[sub_resource type="Curve3D" id="Curve3D_necrl"]
+_data = {
+"points": PackedVector3Array(0, 0, 0, 0, 0, -1.81, 0, 0, 0, 0, 0, 2.29, 0, 0, 0, -4.3, 0, -4.3),
+"tilts": PackedFloat32Array(0, 0)
+}
+point_count = 2
+
+[sub_resource type="SphereMesh" id="SphereMesh_6je2l"]
+
+[node name="Node3D" type="Node3D"]
+
+[node name="TrackSegment" type="Node3D" parent="." node_paths=PackedStringArray("paths")]
+script = ExtResource("1_yrgm1")
+paths = [NodePath("Path3D")]
+
+[node name="Path3D" type="Path3D" parent="TrackSegment"]
+curve = SubResource("Curve3D_necrl")
+
+[node name="PathFollow3D" type="PathFollow3D" parent="TrackSegment/Path3D"]
+transform = Transform3D(0.999999, 0, 0, 0, 1, 0, 0, 0, 0.999999, 0, 0, 0)
+script = ExtResource("2_iagpv")
+speed = 2.985
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="TrackSegment/Path3D/PathFollow3D"]
+mesh = SubResource("SphereMesh_6je2l")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(-0.433013, -0.5, 0.75, 0.216506, 0.75, 0.625, -0.875, 0.433013, -0.216506, 4, 4, -4)
+current = true
+fov = 127.01
