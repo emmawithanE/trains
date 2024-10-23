@@ -1,7 +1,11 @@
-[gd_scene load_steps=7 format=3 uid="uid://dwcagy0fxici2"]
+[gd_scene load_steps=11 format=3 uid="uid://dwcagy0fxici2"]
 
 [ext_resource type="Script" path="res://TrackSegment.gd" id="1_yrgm1"]
 [ext_resource type="PackedScene" uid="uid://dckb1fl2gi75c" path="res://train.tscn" id="2_nxq2c"]
+[ext_resource type="PackedScene" uid="uid://dh3gplg6nym8q" path="res://track_segments/track_straight.tscn" id="3_67iab"]
+[ext_resource type="PackedScene" uid="uid://b342f7onq42y3" path="res://track_segments/track_corner_l.tscn" id="4_le0le"]
+[ext_resource type="PackedScene" uid="uid://djdxl05tk10cy" path="res://track_segments/track_s_bend.tscn" id="5_0m1nt"]
+[ext_resource type="PackedScene" uid="uid://bdq65rwairjso" path="res://track_segments/track_corner_s.tscn" id="6_aci7x"]
 
 [sub_resource type="Curve3D" id="Curve3D_necrl"]
 _data = {
@@ -22,48 +26,84 @@ albedo_color = Color(0.215686, 0.443137, 0.172549, 1)
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_ip6c0"]
 material = SubResource("StandardMaterial3D_rliu8")
-size = Vector2(25.195, 39.87)
+size = Vector2(20, 20)
 
 [node name="Node3D" type="Node3D"]
 
-[node name="TrackSegment" type="Node3D" parent="." node_paths=PackedStringArray("paths", "next_segment")]
+[node name="TrackSegment" type="Node3D" parent="." node_paths=PackedStringArray("next_segment")]
+visible = false
 script = ExtResource("1_yrgm1")
-paths = [NodePath("Path3D")]
 next_segment = NodePath("../TrackSegment2")
 
 [node name="Path3D" type="Path3D" parent="TrackSegment"]
 curve = SubResource("Curve3D_necrl")
 
-[node name="TrackSegment2" type="Node3D" parent="." node_paths=PackedStringArray("paths", "next_segment")]
+[node name="TrackSegment2" type="Node3D" parent="." node_paths=PackedStringArray("next_segment")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.31001, 4.76837e-07, -4.31002)
+visible = false
 script = ExtResource("1_yrgm1")
-paths = [NodePath("Path3D")]
 next_segment = NodePath("../TrackSegment3")
 
 [node name="Path3D" type="Path3D" parent="TrackSegment2"]
 curve = SubResource("Curve3D_necrl")
 
-[node name="TrackSegment3" type="Node3D" parent="." node_paths=PackedStringArray("paths")]
+[node name="TrackSegment3" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.64273, 0, -8.6319)
+visible = false
 script = ExtResource("1_yrgm1")
-paths = [NodePath("Path3D")]
 
 [node name="Path3D" type="Path3D" parent="TrackSegment3"]
 curve = SubResource("Curve3D_gjofs")
 
 [node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(-3.09189e-08, -0.706872, 0.707341, -3.08984e-08, 0.707341, 0.706872, -1, 1.77636e-15, -4.37114e-08, 15.7478, 15.6403, -7.01978)
+transform = Transform3D(-4.37114e-08, -0.707107, 0.707107, 0, 0.707107, 0.707107, -1, 3.09086e-08, -3.09086e-08, 4, 5, 0)
 current = true
-fov = 72.2
+fov = 80.0
 
 [node name="Train" parent="." node_paths=PackedStringArray("starting_segment") instance=ExtResource("2_nxq2c")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0145617, 0, 0.0257282)
-starting_segment = NodePath("../TrackSegment")
+starting_segment = NodePath("../track_straight")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.54, 0)
 mesh = SubResource("PlaneMesh_ip6c0")
 skeleton = NodePath("../Camera3D")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
-transform = Transform3D(0.810665, 0.385592, 0.440613, -0.58551, 0.53387, 0.61005, 0, -0.75253, 0.658558, 0, 9.12407, 6.83961)
+transform = Transform3D(0.810665, 0.385592, 0.440614, -0.58551, 0.53387, 0.61005, 0, -0.75253, 0.658558, 0, 5.25226, 0.773153)
+light_color = Color(1, 1, 0.815686, 1)
+shadow_enabled = true
+
+[node name="track_straight" parent="." node_paths=PackedStringArray("next_segment") instance=ExtResource("3_67iab")]
+next_segment = NodePath("../track_corner_l")
+
+[node name="track_corner_l" parent="." node_paths=PackedStringArray("next_segment") instance=ExtResource("4_le0le")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 4)
+next_segment = NodePath("../track_corner_l2")
+
+[node name="track_corner_l2" parent="." node_paths=PackedStringArray("next_segment") instance=ExtResource("4_le0le")]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -4, 0, 8)
+next_segment = NodePath("../track_straight2")
+
+[node name="track_straight2" parent="." node_paths=PackedStringArray("next_segment") instance=ExtResource("3_67iab")]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, -8, 0, 4)
+next_segment = NodePath("../railroad-curve2")
+
+[node name="railroad-curve2" parent="." node_paths=PackedStringArray("next_segment") instance=ExtResource("5_0m1nt")]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, -8, 0, 0)
+next_segment = NodePath("../railroad-corner-small2")
+
+[node name="railroad-corner-small2" parent="." node_paths=PackedStringArray("next_segment") instance=ExtResource("6_aci7x")]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, -6, 0, -4)
+next_segment = NodePath("../track_straight3")
+
+[node name="track_straight3" parent="." node_paths=PackedStringArray("next_segment") instance=ExtResource("3_67iab")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -4, 0, -6)
+next_segment = NodePath("../railroad-corner-small3")
+
+[node name="railroad-corner-small3" parent="." node_paths=PackedStringArray("next_segment") instance=ExtResource("6_aci7x")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, 0, -6)
+next_segment = NodePath("../railroad-curve3")
+
+[node name="railroad-curve3" parent="." node_paths=PackedStringArray("next_segment") instance=ExtResource("5_0m1nt")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0, -4)
+next_segment = NodePath("../track_straight")

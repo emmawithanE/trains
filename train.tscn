@@ -15,4 +15,5 @@ curve = SubResource("Curve3D_7drhc")
 [node name="PathFollow3D" type="PathFollow3D" parent="Path3D"]
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Path3D/PathFollow3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, 0)
 mesh = SubResource("SphereMesh_iewp6")
